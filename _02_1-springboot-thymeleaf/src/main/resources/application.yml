@@ -1,11 +1,14 @@
 server:
   port: 8989
   servlet:
-    context-path: /thymeleaf
+    # 项目访问路径
+#    context-path: /thymeleaf
 
 spring:
-  thymeleaf:
-    prefix: classpath:/thymeleaf/
+#  thymeleaf:
+    # 模板路径前缀修改 --默认是  /templates/
+#    prefix: classpath:/thymeleaf/
+
 
   datasource:
     hikari:
@@ -15,3 +18,7 @@ spring:
       password: 1234
   application:
     name: thymeleaf
+#    热部署
+  devtools:
+      restart:
+        enabled: true

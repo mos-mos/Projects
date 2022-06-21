@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--<span>asjkdhkashd</span>-->
+<!--thymeleaf语法标签-->
+<span th:text="${msg}" ></span><br/>
+<!--th:value 绑定属性值-->
+<input name="username" th:value="${msg}" type="text"/>
+<hr/>
+<input name="msg" th:value="${#strings.substring(msg,0,6)}" type="text"/>
+<hr/>
+<input name="birth" th:value="${birth}" type="text"/>
+<hr/>
+<input name="birth" th:value="${#dates.format(birth,'yyyy-MM-dd')}" type="text"/>
+</body>
+</html>
