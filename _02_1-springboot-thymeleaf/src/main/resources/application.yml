@@ -1,0 +1,17 @@
+server:
+  port: 8989
+  servlet:
+    context-path: /thymeleaf
+
+spring:
+  thymeleaf:
+    prefix: classpath:/thymeleaf/
+
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.jdbc.Drive
+      url: jdbc:mysql://localhost:13306/mybatisplus
+      username: root
+      password: 1234
+  application:
+    name: thymeleaf
