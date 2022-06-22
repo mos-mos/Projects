@@ -1,0 +1,12 @@
+server:
+  port: 8765
+#spring:
+#  security:
+#    user:
+#      name: mos
+#      password: 1234
+spring:
+  datasource:
+    hikari:
+      driver-class-name: com.mysql.cj.jdbc.Drive
+      url: jdbc:mysql///
