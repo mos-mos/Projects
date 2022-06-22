@@ -21,5 +21,9 @@
 <input name="birth" th:value="${birth}" type="text"/>
 <hr/>
 <input name="birth" th:value="${#dates.format(birth,'yyyy-MM-dd')}" type="text"/>
+
+<hr>
+项目目录：<a th:href="@{/}">@{/}</a>
+服务器目录：<a th:href="@{~/}">@{~/}</a>
 </body>
 </html>

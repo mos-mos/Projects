@@ -1,8 +1,9 @@
 server:
   port: 9099
   servlet:
-  # 项目访问路径
+#   项目访问路径
 #    context-path: /thymeleaf
+    context-path: /templates
 
 spring:
   #  thymeleaf:
@@ -16,7 +17,8 @@ spring:
     username: root
     password: 1234
   application:
-    name: thymeleaf
+#    name: thymeleaf
+    name: templates
 #  #    热部署
 #  devtools:
 #    restart:
