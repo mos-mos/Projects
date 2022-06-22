@@ -8,6 +8,11 @@
 <!--<span>asjkdhkashd</span>-->
 <!--thymeleaf语法标签-->
 <span th:text="${msg}" ></span><br/>
+<hr/>
+<span th:if="${sex} == '男'" >男</span><br/>
+<hr/>
+<span th:if="${sex} == '女'" >女</span><br/>
+<hr/>
 <!--th:value 绑定属性值-->
 <input name="username" th:value="${msg}" type="text"/>
 <hr/>

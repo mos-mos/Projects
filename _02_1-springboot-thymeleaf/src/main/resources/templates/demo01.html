@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <!--th:each 循环遍历   th:each:"元素 ： ${list}"-->
+<table border="1px">
+    <tr>
+        <td>id</td>
+        <td>username</td>
+        <td>password</td>
+        <td>name</td>
+        <td>age</td>
+        <td>email</td>
+    </tr>
+    <tr th:each="user : ${userList}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.userName}"></td>
+        <td th:text="${user.password}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.age}"></td>
+        <td th:text="${user.email}"></td>
+    </tr>
+</table>
+
+</body>
+</html>

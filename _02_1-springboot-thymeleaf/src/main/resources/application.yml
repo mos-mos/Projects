@@ -1,24 +1,23 @@
 server:
-  port: 8989
+  port: 9099
   servlet:
-    # 项目访问路径
+  # 项目访问路径
 #    context-path: /thymeleaf
 
 spring:
-#  thymeleaf:
-    # 模板路径前缀修改 --默认是  /templates/
-#    prefix: classpath:/thymeleaf/
+  #  thymeleaf:
+  # 模板路径前缀修改 --默认是  /templates/
+  #    prefix: classpath:/thymeleaf/
 
 
   datasource:
-    hikari:
-      driver-class-name: com.mysql.jdbc.Drive
-      url: jdbc:mysql://localhost:13306/mybatisplus
-      username: root
-      password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:13306/mybatisplus
+    username: root
+    password: 1234
   application:
     name: thymeleaf
-#    热部署
-  devtools:
-      restart:
-        enabled: true
+#  #    热部署
+#  devtools:
+#    restart:
+#      enabled: true
