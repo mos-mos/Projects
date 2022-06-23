@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3</title>
+</head>
+<body>
+<div id="app">
+    {{name}}<br>
+    v-text:<span v-text="message"></span><br>
+    v-html:<span v-html="message"></span><br>
+    <hr>
+    <input id="jack" type="checkbox" v-model="checkedNames" value="Jack">
+    <label for="jack">Jack</label>
+    <input id="john" type="checkbox" v-model="checkedNames" value="John">
+    <label for="john">John</label>
+    <input id="mike" type="checkbox" v-model="checkedNames" value="Mike">
+    <label for="mike">Mike</label>
+    <br>
+    <span>Checked names: {{ checkedNames }}</span>
+
+    <hr>
+
+    <input id="one" type="radio" v-model="picked" value="One">
+    <label for="one">One</label>
+    <br>
+    <input id="two" type="radio" v-model="picked" value="Two">
+    <label for="two">Two</label>
+    <br>
+    <span>Picked: {{ picked }}</span>
+
+    <hr>
+    <select v-model="selected">
+        <option disabled value="">请选择</option>
+        <option>A</option>
+        <option>B</option>
+        <option>C</option>
+    </select>
+    <span>Selected: {{ selected }}</span>
+</div>
+
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+    var vue = new Vue({
+        el: "#app",
+        data:{
+            name:'www.baidu.com',
+            message: "<h2>moc</h2>",
+            checkedNames: [],
+            picked:'',
+            selected:''
+        }
+
+
+    });
+</script>
+</body>
+</html>

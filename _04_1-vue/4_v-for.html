@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>4</title>
+</head>
+<body>
+<ul id="example-1">
+    <li :key="item.message" v-for="item in items">
+        {{ item.message }}
+    </li>
+    <hr>
+
+    <li :key="item.message" v-for="(item,index) in items">
+        {{index}}  {{ item.message }}   {{item.age}}
+    </li>
+    <hr>
+    <li v-for="user in users" >
+        {{user}}
+    </li>
+
+    <hr>
+    <li v-for="(user,key) in users" >
+        {{key}} : {{user}}
+    </li>
+
+</ul>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+    var ex = new Vue({
+        el: '#example-1',
+        data: {
+            items: [
+                { message: 'Foo' ,age:22},
+                { message: 'Bar' ,age :30}
+            ],
+            users:{
+                username : 'hhh',
+                password : '1234'
+            },
+        }
+
+    })
+</script>
+</body>
+</html>

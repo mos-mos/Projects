@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组件</title>
+</head>
+<body>
+<div id="abc">
+  <mos></mos>
+  <mos></mos>
+  <mos></mos>
+  <mos></mos>
+  <mos></mos>
+  <mos></mos>
+  <mos></mos>
+    <hr>
+    <cos></cos>
+</div>
+<script src="node_modules/vue/dist/vue.js"></script>
+<script>
+    Vue.component("mos",{
+        template : " <div><button v-on:click=\"num++\">点击++</button>" +"<a>   {{num}}  </a>"+
+            "<button v-on:click=\"decrement\">点击--</button></div>",
+        data() {   //data必须是方法
+            return {
+                num: 0
+            }
+        },
+        methods: {
+            decrement(){
+                this.num--;
+            }
+        }
+    })
+    //创建一个对象  局部组件，需要在vue实例进行注册
+    const cos = {
+        template: " <button v-on:click=\"num++\">点击局部++{{num}}</button>",  //html元素
+        data() {   //data必须是方法
+            return {
+                num: 0
+            }
+        }
+    }
+    var mos = new Vue({
+        el : "#abc",
+        components : {
+            cos
+        }
+
+    })
+</script>
+</body>
+</html>
