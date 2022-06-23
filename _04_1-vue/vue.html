@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <h2>{{name}}，非常帅！！！</h2>
+    <input type="text" v-model="aa">
+    <span>{{message}}</span>
+    <button v-on:click="num++">+++</button>
+    <span>{{num}}</span>
+</div>
+<div id="element">
+    <h1>{{message}}</h1>
+    <button v-on:click="num++">点我+++</button>
+    <span>{{num}}</span>
+</div>
+</body>
+<script src="node_modules/vue/dist/vue.js" ></script>
+<script>
+    // 创建vue实例
+    var app = new Vue({
+        el:"#app", // el即element，该vue实例要渲染的页面元素
+        data:{ // 渲染页面需要的数据
+            name: "辉哥",
+            aa: "apap",
+            num:0,
+            message:"24678"
+        }
+    });
+
+    var element=new Vue({
+        el:"#element",
+        date:{
+            message: "aabb",
+            name : 0,
+
+        }
+    })
+
+</script>
+</body>
+</html>
