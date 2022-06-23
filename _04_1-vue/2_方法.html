@@ -10,7 +10,7 @@
     <span>{{num}}</span>
     <h1>{{message}}</h1>
     <button v-on:click="add">点我+++</button>
-<!--    <button v-on:click="decrement">点我&#45;&#45;</button>-->
+    <button v-on:click="decrement">点我--</button>
 </div>
 
 <script src="node_modules/vue/dist/vue.js"></script>
@@ -29,6 +29,9 @@
                 this.message=this.num;
                 console.log(this)
                 console.log(vue)
+            },
+            decrement:function() {
+                this.num--;
             }
         }
     });
