@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+    <!-- 引入样式 -->
+    <link href="element-ui/lib/theme-chalk/index.css" rel="stylesheet">
+
+</head>
+<body>
+<div id="app">
+    {{num}}
+    <button @click="add">++++</button>
+    <button @click="dectement">----</button>
+    <button @click="findAll">查找所有</button>
+
+
+
+    <hr>
+<!--    <table border="1px">-->
+<!--        <tr>-->
+<!--            <td>id</td>-->
+<!--            <td>username</td>-->
+<!--            <td>password</td>-->
+<!--            <td>name</td>-->
+<!--            <td>age</td>-->
+<!--            <td>email</td>-->
+<!--        </tr>-->
+<!--        <tr v-for="user in users">-->
+<!--            <td>{{user.id}}</td>-->
+<!--            <td>{{user.userName}}</td>-->
+<!--            <td>{{user.password}}</td>-->
+<!--            <td>{{user.name}}</td>-->
+<!--            <td>{{user.age}}</td>-->
+<!--            <td>{{user.email}}</td>-->
+<!--        </tr>-->
+<!--    </table>-->
+    <hr>
+
+    <el-table
+            :data="users"
+            border=true
+            stripe
+            style="width: 100%">
+        <el-table-column
+                label="id"
+                prop="id">
+        </el-table-column>
+        <el-table-column
+                label="用户名"
+                prop="userName">
+        </el-table-column>
+        <el-table-column
+                label="密码"
+                prop="password">
+        </el-table-column>
+        <el-table-column
+                label="名字"
+                prop="name">
+        </el-table-column>
+        <el-table-column
+                label="年龄"
+                prop="age">
+        </el-table-column>
+        <el-table-column
+                label="邮箱"
+                prop="email">
+        </el-table-column>
+    </el-table>
+</div>
+
+<script src="vue/dist/vue.js"></script>
+<script src="axios/dist/axios.js"></script>
+<!-- 引入组件库 -->
+<script src="element-ui/lib/index.js"></script>
+<script>
+
+    new Vue({
+        el: "#app",
+        data : {
+            num:0,
+            users:[],
+        },
+        methods : {
+            add(){
+                // this.num++,
+                // console.log(this)
+                axios.get("/student/show")
+                    .then((resp)=>{
+                    console.log("resp")
+                    this.num = resp.date
+                })
+            },
+            dectement(){
+                this.num--,
+                console.log(this)
+            },
+            findAll(){
+                axios.get("/user/list")
+                    .then((resp)=>{
+                      this.users = resp.data;
+                    })
+            }
+        }
+    })
+</script>
+</body>
+</html>

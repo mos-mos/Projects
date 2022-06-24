@@ -6,7 +6,8 @@ server:
 #      name: mos
 #      password: 1234
 spring:
-  datasource:
-    hikari:
-      driver-class-name: com.mysql.cj.jdbc.Drive
-      url: jdbc:mysql///
+    datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:13306/mybatisplus
+      username: root
+      password: 1234
