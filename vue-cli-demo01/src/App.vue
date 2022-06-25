@@ -11,7 +11,7 @@
 <!--    <login/>-->
 <!--    <hr/>-->
 <!--    <register/>-->
-    aa
+
   </div>
 </template>
 
