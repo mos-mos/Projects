@@ -23,7 +23,7 @@ export default {
   components: {
     // Register,
     // Login,
-    HelloWorld
+    // HelloWorld
   }
 }
 </script>
