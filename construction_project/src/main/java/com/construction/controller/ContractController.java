@@ -1,21 +1,16 @@
 package com.construction.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.construction.dto.DeveloperDto;
-import com.construction.model.Developer;
-import com.construction.model.Project;
 import com.construction.page.PageResult;
 import com.construction.page.QueryPageBean;
 import com.construction.page.Result;
+import com.construction.service.ContractService;
 import com.construction.service.DevelopService;
+import com.construction.vo.ConProVo;
 import com.construction.vo.DevProVo;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 
 /**
  * @BelongsProject: ideaproject
@@ -26,22 +21,22 @@ import java.util.Date;
  * @Version: 1.0
  */
 @RestController
-@RequestMapping("developer")
-public class DevelopController {
+@RequestMapping("contract")
+public class ContractController {
     @Autowired
-    private DevelopService developService;
+    private ContractService contractService;
 
     @PostMapping("allPage")
     public PageResult page(@RequestBody QueryPageBean queryPageBean) {
-        PageResult result = developService.findPage(queryPageBean);
+        PageResult result = contractService.findPage(queryPageBean);
         return result;
     }
 
     @PostMapping("add")
-    public Result add(String dname,Integer[] pids) {
-        System.out.println(dname);
+    public Result add(String cname,Integer[] pids) {
+        System.out.println(cname);
         System.out.println(Arrays.toString(pids));
-        int rom = developService.addAndBind(dname, pids);
+        int rom = contractService.addAndBind(cname, pids);
         if(rom > 0){
             return Result.success();
         }else {
@@ -49,22 +44,22 @@ public class DevelopController {
         }
     }
 
-    @GetMapping("findByDid")
-    public Result findByPid(@RequestParam("did") String did){
-        Result result = developService.findByDid(did);
+    @GetMapping("findByCid")
+    public Result findByPid(@RequestParam("cid") String cid){
+        Result result = contractService.findByCid(cid);
         return result;
     }
 
     @PostMapping("edit")
-    public Result edit(@RequestBody DevProVo devProVo){
-        Result result = developService.bindAndEdit(devProVo);
+    public Result edit(@RequestBody ConProVo conProVo){
+        Result result = contractService.bindAndEdit(conProVo);
         return result;
 
     }
 
     @GetMapping("delete")
-    public Result delete(@RequestParam("did") String did){
-        Result result = developService.deleteByDid(did);
+    public Result delete(@RequestParam("cid") String cid){
+        Result result = contractService.deleteByDid(cid);
         return result;
     }
 }

@@ -1,8 +1,5 @@
 package com.construction.controller;
 
-
-
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.construction.page.PageResult;
@@ -85,7 +82,6 @@ public class ProjectController {
      * @Date: 2022/6/28 15:06
      * @Version 1.0.0
      */
-    
     @PostMapping("add")
     public Result addProject(@RequestBody Project project){
         int row = projectService.addProject(project);

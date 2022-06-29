@@ -14,6 +14,7 @@ import com.construction.model.Project;
 import com.construction.page.PageResult;
 import com.construction.page.QueryPageBean;
 import com.construction.service.ProjectService;
+import org.apache.commons.lang3.ObjectUtils;
 import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     private ProjectMapper projectMapper;
     @Autowired
     private DevelopMapper developMapper;
-
     @Autowired
     private ContractMapper contractMapper;
 
@@ -76,24 +76,42 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         }
 //        result.setRows(list);
 //        result.setTotal(total);
-
 //        return result;
         return lists;
     }
 
     @Override
-    public PageResult findPageById(QueryPageBean queryPageBean) {
-        PageResult result = new PageResult();
-        Integer currentPage = queryPageBean.getCurrentPage(); //当前页
-        Integer pageSize = queryPageBean.getPageSize();//每页大小
-        //total 总记录数
-        List<Project> page = projectMapper.findPage((currentPage-1)*pageSize, pageSize);
-        //rows  当前页的数据
-        Long count = projectMapper.count();
-        result.setRows(page);
-        result.setTotal(count);
-        return result;
+    public List<Project> findByDid(String did) {
+        QueryWrapper<Project> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("did",did);
+        queryWrapper.eq("status",1);
+        List<Project> projects = projectMapper.selectList(queryWrapper);
+        return projects;
     }
+
+
+   @Override
+    public List<Project> findByCid(String cid) {
+        QueryWrapper<Project> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("cid",cid);
+        queryWrapper.eq("status",1);
+        List<Project> projects = projectMapper.selectList(queryWrapper);
+        return projects;
+    }
+
+    //    @Override
+//    public PageResult findPageById(QueryPageBean queryPageBean) {
+//        PageResult result = new PageResult();
+//        Integer currentPage = queryPageBean.getCurrentPage(); //当前页
+//        Integer pageSize = queryPageBean.getPageSize();//每页大小
+//        //total 总记录数
+//        List<Project> page = projectMapper.findPage((currentPage-1)*pageSize, pageSize);
+//        //rows  当前页的数据
+//        Long count = projectMapper.count();
+//        result.setRows(page);
+//        result.setTotal(count);
+//        return result;
+//    }
 
     @Override
     @Transactional  //增删改需要事务管理
@@ -115,6 +133,17 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return row;
     }
 
+//    @Override
+//    public void updateByPid(String did , int[] pids) {
+//
+//        if (ObjectUtils.isNotEmpty(pids)){
+//
+//            for(int pid : pids){
+//                int row = projectMapper.updateByPid(did,pid,new Date());
+//            }
+//        }
+//    }
+
     @Override
     public int deleteProject(Integer pid){
         Date date = new Date();
@@ -124,20 +153,18 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     }
 
     /**
-     * @description: 给工程绑定did开发商
+     * @description: 开发商绑定工程
      * @author: mos / Wang Zero
      * @param: did
      * @param: pids
      * @Date: 2022/6/28 21:22
      * @Version 1.0.0
      */
-
     @Override
     @Transactional
-    @Rollback
-    public int bandDid(String did, Integer[] pids) {
+    public int bindDid(String did, Integer[] pids) {
         int row = -1;
-        if (pids != null || pids.length > 0){
+        if (ObjectUtils.isNotEmpty(pids)){
             for (Integer pid : pids) {
                 Project project = new Project();
                 project.setPid(pid);
@@ -145,6 +172,54 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 project.setUpdateTime(new Date());
                 row = projectMapper.updateById(project);
             }
+        }
+        return row;
+    }
+
+    @Override
+    @Transactional
+    public int unBindDid(String did) {
+        int row = -1;
+        if (ObjectUtils.isNotEmpty(did)){
+                Project project = new Project();
+                project.setDid("");
+//                project.setDid(did);
+                project.setUpdateTime(new Date());
+                UpdateWrapper<Project> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.eq("did", did);
+                row = projectMapper.update(project,updateWrapper);
+
+        }
+        return row;
+    }
+    @Override
+    @Transactional
+    public int bindCid(String cid, Integer[] pids) {
+        int row = -1;
+        if (ObjectUtils.isNotEmpty(pids)){
+            for (Integer pid : pids) {
+                Project project = new Project();
+                project.setPid(pid);
+                project.setCid(cid);
+                project.setUpdateTime(new Date());
+                row = projectMapper.updateById(project);
+            }
+        }
+        return row;
+    }
+
+    @Override
+    @Transactional
+    public int unBindCid(String cid) {
+        int row = -1;
+        if (ObjectUtils.isNotEmpty(cid)){
+                Project project = new Project();
+                project.setCid("");
+//                project.setDid(did);
+                project.setUpdateTime(new Date());
+                UpdateWrapper<Project> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.eq("cid", cid);
+                row = projectMapper.update(project,updateWrapper);
         }
         return row;
     }

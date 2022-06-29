@@ -13,8 +13,6 @@ import java.util.Date;
 
 @Data
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
 @TableName("developer")
 public class Developer {
     @TableId(value = "did", type = IdType.ASSIGN_UUID )
@@ -22,5 +20,5 @@ public class Developer {
     @TableField("dname")
     private String dName;
     @TableField("updatetime")
-    private Date udpateTime;
+    private Date updateTime;
 }

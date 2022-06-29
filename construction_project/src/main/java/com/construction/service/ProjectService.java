@@ -7,10 +7,12 @@ import com.construction.model.Project;
 import com.construction.page.PageResult;
 import com.construction.page.QueryPageBean;
 
+import java.util.List;
+
 public interface ProjectService extends IService<Project> {
 
 
-    PageResult findPageById(QueryPageBean queryPageBean);
+//    PageResult findPageById(QueryPageBean queryPageBean);
     Page<Project> findPage(QueryPageBean queryPageBean);
 
     int addProject(Project project);
@@ -19,5 +21,13 @@ public interface ProjectService extends IService<Project> {
 
     int deleteProject(Integer pid);
 
-    int bandDid(String did,Integer[] pids);
+    int unBindDid(String did);
+    int bindDid(String did,Integer[] pids);
+    int unBindCid(String cid);
+    int bindCid(String cid,Integer[] pids);
+
+    List<Project> findByDid(String did);
+    List<Project> findByCid(String cid);
+
+//    void updateByPid(String did , int[] pids);
 }

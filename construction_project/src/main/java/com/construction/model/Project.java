@@ -14,8 +14,6 @@ import java.util.Date;
 
 @Data
 @ToString
-@NoArgsConstructor
-@AllArgsConstructor
 @TableName("project")
 public class Project {
     @TableId(value = "pid", type = IdType.AUTO)

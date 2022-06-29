@@ -38,5 +38,6 @@ public interface ProjectMapper extends BaseMapper<Project> {
     @Update("update project set status = 0 , updatetime = #{updatetime} where pid = #{pid} ")
     int deleteByPid(@Param("pid") Integer pid ,@Param("updatetime") Date date);
 
-
+    @Update("update project set pid = #{pid} , updatetime = #{updatetime}  where did = #{did} and status = 1" )
+    int updateByPid(@Param("did")String did,@Param("pid") int pid,@Param("updatetime") Date date);
 }
