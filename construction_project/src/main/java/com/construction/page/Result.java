@@ -6,6 +6,8 @@ package com.construction.page;
  * @版本 1.0
  * 祖师爷保佑，永无Bug
  */
+import com.construction.constants.Status;
+
 import java.io.Serializable;
 
 /**
@@ -50,5 +52,11 @@ public class Result implements Serializable{
 
     public void setData(Object data) {
         this.data = data;
+    }
+    public static Result success(){
+        return new Result(Status.SUCCESS.isFlag(),Status.SUCCESS.getMessage());
+    }
+    public static Result fail(){
+        return new Result(Status.FAIL.isFlag(),Status.FAIL.getMessage());
     }
 }

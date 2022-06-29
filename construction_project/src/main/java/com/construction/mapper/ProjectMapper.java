@@ -8,13 +8,11 @@ import com.construction.model.Project;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
 
+import java.util.Date;
 import java.util.List;
 
 @Mapper
 public interface ProjectMapper extends BaseMapper<Project> {
-    //    @Select("Select * from project where status =1 limit #{currentPage},#{pageSize}")
-//    List<Project> findPage(@Param("currentPage")Integer currentPage, @Param("pageSize") Integer pageSize);
-//
     @Select("select count(*) from project where status=1")
     Long count();
     //分页查询  limit  0,10
@@ -37,7 +35,8 @@ public interface ProjectMapper extends BaseMapper<Project> {
     List<Project> findPage(@Param("currentPage") Integer currentPage, @Param("pageSize") Integer pageSize);
 
 
-//    String querySql = "SELECT pro.*, dev.* FROM project AS pro LEFT JOIN developer AS dev ON dev.did = pro.did ";
-//    String wrapperSql = "SELECT * from ( " + querySql + " ) AS q ${ew.customSqlSegment}";
+    @Update("update project set status = 0 , updatetime = #{updatetime} where pid = #{pid} ")
+    int deleteByPid(@Param("pid") Integer pid ,@Param("updatetime") Date date);
+
 
 }

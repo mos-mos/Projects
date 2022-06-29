@@ -5,13 +5,17 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.Date;
 
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("project")
 public class Project {
     @TableId(value = "pid", type = IdType.AUTO)
@@ -31,9 +35,12 @@ public class Project {
     private Date updateTime;
 
     //开发商实体属性 一对一
-
     @TableField(exist = false)
     private Developer developer;
+
+    //承建商实体属性 一对一
+    @TableField(exist = false)
+    private Contractor contractor;
 
 
 }
