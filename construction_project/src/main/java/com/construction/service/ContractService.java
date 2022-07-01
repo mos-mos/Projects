@@ -6,7 +6,6 @@ import com.construction.page.PageResult;
 import com.construction.page.QueryPageBean;
 import com.construction.page.Result;
 import com.construction.vo.ConProVo;
-import com.construction.vo.DevProVo;
 
 public interface ContractService extends IService<Contractor> {
     PageResult findPage(QueryPageBean queryPageBean);

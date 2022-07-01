@@ -11,14 +11,11 @@ import com.construction.mapper.ProjectMapper;
 import com.construction.model.Contractor;
 import com.construction.model.Developer;
 import com.construction.model.Project;
-import com.construction.page.PageResult;
 import com.construction.page.QueryPageBean;
 import com.construction.service.ProjectService;
 import org.apache.commons.lang3.ObjectUtils;
-import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -47,8 +44,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 
     @Override
     public Page<Project> findPage(QueryPageBean queryPageBean) {
-
-        PageResult result = new PageResult();
         Integer currentPage = queryPageBean.getCurrentPage();
         Integer pageSize = queryPageBean.getPageSize();
         String queryString = queryPageBean.getQueryString();
@@ -65,14 +60,10 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 //        List<Project> list = lists.getRecords();
 
         for (Project list : lists.getRecords()) {
-            QueryWrapper<Developer> dev = new QueryWrapper<>();
-            dev.eq("status",1).eq("did",list.getDid());
-            Developer did = developMapper.selectOne(dev);
-            QueryWrapper<Contractor> con = new QueryWrapper<>();
-            con.eq("status",1).eq("cid",list.getCid());
-            Contractor cid = contractMapper.selectOne(con);
-            list.setDeveloper(did);
-            list.setContractor(cid);
+            Developer developer = getDeveloper(list.getDid());
+            Contractor contractor = getContractor(list.getCid());
+            list.setDeveloper(developer);
+            list.setContractor(contractor);
         }
 //        result.setRows(list);
 //        result.setTotal(total);
@@ -80,21 +71,64 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
         return lists;
     }
 
+    public Developer getDeveloper(String did) {
+        QueryWrapper<Developer> dev = new QueryWrapper<>();
+        dev.eq("status", 1).eq("did", did);
+        Developer developer = developMapper.selectOne(dev);
+        return developer;
+    }
+
+    public Contractor getContractor(String cid) {
+        QueryWrapper<Contractor> con = new QueryWrapper<>();
+        con.eq("status", 1).eq("cid", cid);
+        Contractor contractor = contractMapper.selectOne(con);
+        return contractor;
+    }
+
+    @Override
+    public Project findProject(Integer id) {
+        QueryWrapper<Project> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("pid", id);
+        queryWrapper.eq("status", 1);
+        Project project = projectMapper.selectOne(queryWrapper);
+        if (project != null ){
+            if (ObjectUtils.isNotEmpty(project.getDid())) {
+                Developer developer = getDeveloper(project.getDid());
+                project.setDeveloper(developer);
+            }
+            if (ObjectUtils.isNotEmpty(project.getCid())) {
+                Contractor contractor = getContractor(project.getCid());
+                project.setContractor(contractor);
+            }
+        }
+
+        return project;
+    }
+
     @Override
     public List<Project> findByDid(String did) {
         QueryWrapper<Project> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("did",did);
-        queryWrapper.eq("status",1);
+        queryWrapper.eq("did", did);
+        queryWrapper.eq("status", 1);
         List<Project> projects = projectMapper.selectList(queryWrapper);
         return projects;
     }
 
 
-   @Override
+    @Override
     public List<Project> findByCid(String cid) {
         QueryWrapper<Project> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("cid",cid);
-        queryWrapper.eq("status",1);
+        queryWrapper.eq("cid", cid);
+        queryWrapper.eq("status", 1);
+        List<Project> projects = projectMapper.selectList(queryWrapper);
+        return projects;
+    }
+
+    @Override
+    public List<Project> findList() {
+        QueryWrapper<Project> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("pid", pid);
+        queryWrapper.eq("status", 1);
         List<Project> projects = projectMapper.selectList(queryWrapper);
         return projects;
     }
@@ -145,7 +179,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
 //    }
 
     @Override
-    public int deleteProject(Integer pid){
+    public int deleteProject(Integer pid) {
         Date date = new Date();
         System.out.println(date);
         int row = projectMapper.deleteByPid(pid, date);
@@ -164,7 +198,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     @Transactional
     public int bindDid(String did, Integer[] pids) {
         int row = -1;
-        if (ObjectUtils.isNotEmpty(pids)){
+        if (ObjectUtils.isNotEmpty(pids)) {
             for (Integer pid : pids) {
                 Project project = new Project();
                 project.setPid(pid);
@@ -180,23 +214,24 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     @Transactional
     public int unBindDid(String did) {
         int row = -1;
-        if (ObjectUtils.isNotEmpty(did)){
-                Project project = new Project();
-                project.setDid("");
+        if (ObjectUtils.isNotEmpty(did)) {
+            Project project = new Project();
+            project.setDid("");
 //                project.setDid(did);
-                project.setUpdateTime(new Date());
-                UpdateWrapper<Project> updateWrapper = new UpdateWrapper<>();
-                updateWrapper.eq("did", did);
-                row = projectMapper.update(project,updateWrapper);
+            project.setUpdateTime(new Date());
+            UpdateWrapper<Project> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("did", did);
+            row = projectMapper.update(project, updateWrapper);
 
         }
         return row;
     }
+
     @Override
     @Transactional
     public int bindCid(String cid, Integer[] pids) {
         int row = -1;
-        if (ObjectUtils.isNotEmpty(pids)){
+        if (ObjectUtils.isNotEmpty(pids)) {
             for (Integer pid : pids) {
                 Project project = new Project();
                 project.setPid(pid);
@@ -212,14 +247,14 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
     @Transactional
     public int unBindCid(String cid) {
         int row = -1;
-        if (ObjectUtils.isNotEmpty(cid)){
-                Project project = new Project();
-                project.setCid("");
+        if (ObjectUtils.isNotEmpty(cid)) {
+            Project project = new Project();
+            project.setCid("");
 //                project.setDid(did);
-                project.setUpdateTime(new Date());
-                UpdateWrapper<Project> updateWrapper = new UpdateWrapper<>();
-                updateWrapper.eq("cid", cid);
-                row = projectMapper.update(project,updateWrapper);
+            project.setUpdateTime(new Date());
+            UpdateWrapper<Project> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("cid", cid);
+            row = projectMapper.update(project, updateWrapper);
         }
         return row;
     }

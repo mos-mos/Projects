@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @TableName("contractor")
@@ -17,6 +18,7 @@ public class Contractor {
     private String cName;
     @TableField("updatetime")
     private Date updateTime;
-
+    @TableField(exist = false)
+    private List<Project> projects;
 
 }
