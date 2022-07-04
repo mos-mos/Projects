@@ -2,6 +2,9 @@ package com.construction;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 //@MapperScan(basePackages = "com.construction.mapper")
@@ -13,6 +16,12 @@ public class ConstructionApplication {
 //    @Bean
 //    public PaginationInnerInterceptor paginationInnerInterceptor() {
 //        return new PaginationInnerInterceptor(DbType.MYSQL);
+//    }
+
+    //密码加密器
+//    @Bean
+//    public PasswordEncoder passwordEncoder(){
+//        return new BCryptPasswordEncoder();
 //    }
 
 }

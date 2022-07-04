@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+	<meta charset="utf-8">
+    <title>建筑工程后台管理系统</title>
+	<link href="css/style1.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="main">
+    	<div class="mainin">
+
+           <div style="font-size: 20px;text-align: center;margin-bottom:5px;font-weight:bold;letter-spacing:5px ">建筑工程后台管理系统登录</div>
+            <div>
+            <form action="/login" method="POST">
+            <div class="mainin1">
+            	<ul>
+                	<li><span>用户名：</span><input class="SearchKeyword" id="username" name="username" placeholder="登录名" type="text"></li>
+                    <li><span>密码：</span><input class="SearchKeyword2" id="password" name="password" placeholder="密码" type="password"></li>
+                    <li><button class="tijiao">提交</button></li>
+                </ul>
+            </div>
+			</form>
+            </div>
+            <div class="footpage"><span style="font-family:arial;">Copyright@千锋教育有限公司</span></div>
+        </div>
+    </div>
+<img id="loading" src="images/loading.gif" style=" display:none;position:absolute;" />
+<div class="cssPOPLoading" id="POPLoading">
+    <div style=" height:110px; border-bottom:1px solid #9a9a9a">
+        <div class="showMessge"></div>
+    </div>
+    <div style=" line-height:40px; font-size:14px; letter-spacing:1px;">
+        <a onclick="puc()">确定</a>
+    </div>
+</div>
+<div style="text-align:center;">
+
+</div>
+</body>
+</html>
