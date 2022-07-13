@@ -7,6 +7,8 @@ import com.construction.dto.BranchDto;
 import com.construction.dto.StageDto;
 import com.construction.mapper.BranchMapper;
 import com.construction.model.Branch;
+import com.construction.model.Contractor;
+import com.construction.model.Developer;
 import com.construction.model.Project;
 import com.construction.page.PageResult;
 import com.construction.page.QueryPageBean;
@@ -125,5 +127,20 @@ public class BranchServiceImpl extends ServiceImpl<BranchMapper, Branch> impleme
             result.setMessage("success");
         }
         return result;
+    }
+
+    @Override
+    public Branch findBranch(String bid) {
+        QueryWrapper<Branch> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("bid", bid);
+        queryWrapper.eq("status", 1);
+        Branch branch = branchMapper.selectOne(queryWrapper);
+        if (branch != null ){
+            if (ObjectUtils.isNotEmpty(branch.getPid())) {
+                Project project = projectService.findProject(branch.getPid());
+                branch.setProject(project);
+            }
+        }
+        return branch;
     }
 }

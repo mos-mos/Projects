@@ -16,4 +16,7 @@ public interface BranchService extends IService<Branch>{
     Result deleteByBid(String bid);
 
     Result findByBid(String bid);
+
+    Branch findBranch(String bid);
+
 }

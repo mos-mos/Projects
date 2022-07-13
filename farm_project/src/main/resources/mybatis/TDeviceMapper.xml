@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.farm.mapper.TDeviceMapper">
+
+    <resultMap type="TDevice" id="TDeviceResult">
+        <result property="id" column="id"/>
+        <result property="sn" column="sn"/>
+        <result property="name" column="name"/>
+        <result property="typeId" column="typeId"/>
+        <result property="farmId" column="farmId"/>
+        <result property="location" column="location"/>
+        <result property="image" column="image"/>
+        <result property="installTime" column="installTime"/>
+        <result property="state" column="state"/>
+        <result property="standard" column="standard"/>
+        <result property="manufacturer" column="manufacturer"/>
+        <result property="userId" column="userId"/>
+        <result property="softwareVersion" column="softwareVersion"/>
+        <result property="thresholdMin" column="thresholdMin"/>
+        <result property="thresholdMax" column="thresholdMax"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="operator" column="operator"/>
+    </resultMap>
+
+    <resultMap id="TDeviceAndTypeAndFarmAndUserResult" type="TDevice" extends="TDeviceResult">
+        <association property="type" javaType="TDeviceType">
+            <id column="typeId" property="id"/>
+            <result property="name" column="name"/>
+            <result property="description" column="description"/>
+            <result property="remark" column="remark"/>
+            <result property="operator" column="operator"/>
+            <result property="createTime" column="createTime"/>
+            <result property="updateTime" column="updateTime"/>
+
+        </association>
+        <association property="farm" javaType="TFarm">
+            <id column="farmId" property="id"/>
+            <result property="province" column="province"/>
+            <result property="city" column="city"/>
+            <result property="district" column="district"/>
+            <result property="type" column="type"/>
+            <result property="name" column="name"/>
+            <result property="linkman" column="linkman"/>
+            <result property="telephone" column="telephone"/>
+            <result property="remark" column="remark"/>
+            <result property="createTime" column="createTime"/>
+            <result property="updateTime" column="updateTime"/>
+            <result property="userId" column="userId"/>
+            <result property="mainCrop" column="mainCrop"/>
+            <result property="area" column="area"/>
+            <!--    <result property="img" column="img"/>-->
+        </association>
+        <association property="sysUser" javaType="SysUser">
+            <id column="userId" property="id"></id>
+            <result property="username" column="username"/>
+            <!--            <result property="password"    column="password"    />-->
+            <result property="salt" column="salt"/>
+            <result property="nickname" column="nickname"/>
+            <result property="headImgUrl" column="headImgUrl"/>
+            <result property="phone" column="phone"/>
+            <result property="telephone" column="telephone"/>
+            <result property="email" column="email"/>
+            <result property="birthday" column="birthday"/>
+            <result property="sex" column="sex"/>
+            <!--        <result property="STATUS"    column="STATUS"    />-->
+            <result property="createTime" column="createTime"/>
+            <result property="updateTime" column="updateTime"/>
+        </association>
+    </resultMap>
+
+
+    <sql id="selectTDeviceVo">
+        select id,
+               sn,
+               name,
+               typeId,
+               farmId,
+               location,
+               image,
+               installTime,
+               state,
+               standard,
+               manufacturer,
+               userId,
+               softwareVersion,
+               thresholdMin,
+               thresholdMax,
+               remark,
+               createTime,
+               updateTime,
+               operator
+        from t_device
+    </sql>
+
+    <sql id="selectTDeviceAndTypeAndFarmAndUserVO">
+        SELECT *
+        FROM t_device
+                 LEFT JOIN t_device_type ON t_device.typeId = t_device_type.id
+                 LEFT JOIN t_farm ON t_device.farmId = t_farm.id
+                 LEFT JOIN sys_user ON t_device.userId = sys_user.id
+    </sql>
+
+    <select id="selectTDevicePage" parameterType="TDevice" resultMap="TDeviceAndTypeAndFarmAndUserResult">
+        <include refid="selectTDeviceAndTypeAndFarmAndUserVO"/>
+        <where>
+            sys_user.STATUS = 1
+            <if test="sn != null  and sn != ''">and sn = #{sn}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="typeId != null ">and typeId = #{typeId}</if>
+            <if test="farmId != null ">and farmId = #{farmId}</if>
+            <if test="location != null  and location != ''">and location = #{location}</if>
+            <if test="image != null  and image != ''">and image = #{image}</if>
+            <if test="installTime != null ">and installTime = #{installTime}</if>
+            <if test="state != null  and state != ''">and state = #{state}</if>
+            <if test="standard != null  and standard != ''">and standard = #{standard}</if>
+            <if test="manufacturer != null  and manufacturer != ''">and manufacturer = #{manufacturer}</if>
+            <if test="userId != null ">and userId = #{userId}</if>
+            <if test="softwareVersion != null  and softwareVersion != ''">and softwareVersion = #{softwareVersion}</if>
+            <if test="thresholdMin != null ">and thresholdMin = #{thresholdMin}</if>
+            <if test="thresholdMax != null ">and thresholdMax = #{thresholdMax}</if>
+            <if test="createTime != null ">and createTime = #{createTime}</if>
+            <if test="updateTime != null ">and updateTime = #{updateTime}</if>
+            <if test="operator != null  and operator != ''">and operator = #{operator}</if>
+        </where>
+    </select>
+
+    <select id="selectTDeviceList" parameterType="TDevice" resultMap="TDeviceResult">
+        <include refid="selectTDeviceVo"/>
+        <where>
+            <if test="sn != null  and sn != ''">and sn = #{sn}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="typeId != null ">and typeId = #{typeId}</if>
+            <if test="farmId != null ">and farmId = #{farmId}</if>
+            <if test="location != null  and location != ''">and location = #{location}</if>
+            <if test="image != null  and image != ''">and image = #{image}</if>
+            <if test="installTime != null ">and installTime = #{installTime}</if>
+            <if test="state != null  and state != ''">and state = #{state}</if>
+            <if test="standard != null  and standard != ''">and standard = #{standard}</if>
+            <if test="manufacturer != null  and manufacturer != ''">and manufacturer = #{manufacturer}</if>
+            <if test="userId != null ">and userId = #{userId}</if>
+            <if test="softwareVersion != null  and softwareVersion != ''">and softwareVersion = #{softwareVersion}</if>
+            <if test="thresholdMin != null ">and thresholdMin = #{thresholdMin}</if>
+            <if test="thresholdMax != null ">and thresholdMax = #{thresholdMax}</if>
+            <if test="createTime != null ">and createTime = #{createTime}</if>
+            <if test="updateTime != null ">and updateTime = #{updateTime}</if>
+            <if test="operator != null  and operator != ''">and operator = #{operator}</if>
+        </where>
+    </select>
+
+    <select id="selectTDeviceById" parameterType="Long" resultMap="TDeviceResult">
+        <include refid="selectTDeviceVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTDevice" parameterType="TDevice" useGeneratedKeys="true" keyProperty="id">
+        insert into t_device
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sn != null">sn,</if>
+            <if test="name != null">name,</if>
+            <if test="typeId != null">typeId,</if>
+            <if test="farmId != null">farmId,</if>
+            <if test="location != null">location,</if>
+            <if test="image != null">image,</if>
+            <if test="installTime != null">installTime,</if>
+            <if test="state != null">state,</if>
+            <if test="standard != null">standard,</if>
+            <if test="manufacturer != null">manufacturer,</if>
+            <if test="userId != null">userId,</if>
+            <if test="softwareVersion != null">softwareVersion,</if>
+            <if test="thresholdMin != null">thresholdMin,</if>
+            <if test="thresholdMax != null">thresholdMax,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">createTime,</if>
+            <if test="updateTime != null">updateTime,</if>
+            <if test="operator != null">operator,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sn != null">#{sn},</if>
+            <if test="name != null">#{name},</if>
+            <if test="typeId != null">#{typeId},</if>
+            <if test="farmId != null">#{farmId},</if>
+            <if test="location != null">#{location},</if>
+            <if test="image != null">#{image},</if>
+            <if test="installTime != null">#{installTime},</if>
+            <if test="state != null">#{state},</if>
+            <if test="standard != null">#{standard},</if>
+            <if test="manufacturer != null">#{manufacturer},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="softwareVersion != null">#{softwareVersion},</if>
+            <if test="thresholdMin != null">#{thresholdMin},</if>
+            <if test="thresholdMax != null">#{thresholdMax},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="operator != null">#{operator},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTDevice" parameterType="TDevice">
+        update t_device
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sn != null">sn = #{sn},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="typeId != null">typeId = #{typeId},</if>
+            <if test="farmId != null">farmId = #{farmId},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="image != null">image = #{image},</if>
+            <if test="installTime != null">installTime = #{installTime},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="standard != null">standard = #{standard},</if>
+            <if test="manufacturer != null">manufacturer = #{manufacturer},</if>
+            <if test="userId != null">userId = #{userId},</if>
+            <if test="softwareVersion != null">softwareVersion = #{softwareVersion},</if>
+            <if test="thresholdMin != null">thresholdMin = #{thresholdMin},</if>
+            <if test="thresholdMax != null">thresholdMax = #{thresholdMax},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="operator != null">operator = #{operator},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTDeviceById" parameterType="Long">
+        delete
+        from t_device
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteTDeviceByIds" parameterType="String">
+        delete from t_device where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

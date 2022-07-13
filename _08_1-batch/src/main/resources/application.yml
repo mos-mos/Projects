@@ -1,0 +1,10 @@
+server:
+  port: 9002
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:13306/bactch
+    username: root
+    password: 1234
+mybatis:
+  mapper-locations: classpath:/mybatis/*.xml

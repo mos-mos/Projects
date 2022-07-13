@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- 页面meta -->
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <title>任务计划管理</title>
+    <meta content="任务计划管理" name="description">
+    <meta content="任务计划管理" name="keywords">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+    <!-- 引入样式 -->
+    <!-- 引入样式 -->
+    <link href="https://unpkg.com/element-ui/lib/theme-chalk/index.css" rel="stylesheet">
+    <!--<link rel="stylesheet" href="../../plugins/elementui/index.css">-->
+    <link href="../../plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../../css/style.css" rel="stylesheet">
+</head>
+<body class="hold-transition">
+<div id="app">
+    <div class="content-header">
+        <h1>任务计划管理</h1>
+    </div>
+    <div class="app-container">
+        <div class="box">
+            <div class="filter-container">
+                <el-input class="filter-item" placeholder="任务计划名称" style="width: 200px;"
+                          v-model="pagination.queryString"></el-input>
+                <el-button @click="findPage()" circle class="dalfBut" icon="el-icon-search"></el-button>
+                <el-button @click="handleCreate()" class="butT" type="primary">新建</el-button>
+            </div>
+            <el-table :data="dataList" current-row-key="id" highlight-current-row size="small" stripe>
+                <el-table-column align="center" label="序号" type="index"></el-table-column>
+                <el-table-column align="center" label="任务计划ID" prop="tid"></el-table-column>
+                <el-table-column align="center" label="任务计划名称" prop="tname"></el-table-column>
+                <el-table-column align="center" label="开始时间" prop="starttime"></el-table-column>
+                <el-table-column align="center" label="结束时间" prop="endtime"></el-table-column>
+                <el-table-column align="center" label="部门名称" prop="branch.bname"></el-table-column>
+                <el-table-column align="center" label="工程名称" prop="branch.project.pname"></el-table-column>
+                <el-table-column align="center" label="开发商名称" prop="branch.project.developer.dname"></el-table-column>
+
+                <el-table-column align="center" label="操作">
+                    <template slot-scope="scope">
+                        <!--scope 插槽，就是一块小内存，存的是当前行的对象数据，scope.row代表的是当前行，是一个json对象-->
+                        <el-button @click="handleUpdate(scope.row)" size="mini" type="primary">编辑</el-button>
+                        <el-button @click="handleDelete(scope.row)" size="mini" type="danger">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination-container">
+                <el-pagination
+                        :current-page="pagination.currentPage"
+                        :page-size="pagination.pageSize"
+                        :total="pagination.total"
+                        @current-change="handleCurrentChange"
+                        class="pagiantion"
+                        layout="total, prev, pager, next, jumper">
+                </el-pagination>
+            </div>
+            <!-- 新增标签弹层 -->
+            <div class="add-form">
+                <el-dialog :visible.sync="dialogFormVisible" title="新增任务计划工程">
+                    <el-form :model="formData" :rules="rules" label-position="right" label-width="100px"
+                             ref="dataAddForm">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="任务计划名称" prop="tname">
+                                    <el-input v-model="formData.tname"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="开始时间" prop="starttime">
+                                    <el-date-picker placeholder="选择日期" style="width: 100%;" type="date" v-model="formData.starttime"></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="结束时间" prop="endtime">
+                                    <el-date-picker placeholder="选择日期" style="width: 100%;" type="date" v-model="formData.endtime"></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <!--选择部门-->
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="选择部门">
+                                    <el-select placeholder="请选择部门" v-model="formData.bid">
+                                        <el-option :label="branch.bname" :value="branch.bid"
+                                                   v-for="branch in branchs "></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                    <div class="dialog-footer" slot="footer">
+                        <el-button @click="dialogFormVisible = false">取消</el-button>
+                        <el-button @click="handleAdd()" type="primary">确定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+
+            <!-- 编辑标签弹层 -->
+            <div class="add-form">
+                <el-dialog :visible.sync="dialogFormVisible4Edit" title="编辑工程">
+                    <el-form :model="formData" :rules="rules" label-position="right" label-width="100px"
+                             ref="dataEditForm">
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="任务计划名称" prop="tname">
+                                    <el-input v-model="formData.tname"/>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="开始时间" prop="starttime">
+                                    <el-date-picker placeholder="选择日期" style="width: 100%;" type="date" v-model="formData.starttime"></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="结束时间" prop="endtime">
+                                    <el-date-picker placeholder="选择日期" style="width: 100%;" type="date" v-model="formData.endtime"></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <!--选择部门-->
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item label="选择部门">
+                                    <el-select placeholder="请选择部门" v-model="formData.bid">
+                                        <el-option :label="branch.bname" :value="branch.bid"
+                                                   v-for="branch in branchs "></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                    <div class="dialog-footer" slot="footer">
+                        <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
+                        <el-button @click="handleEdit()" type="primary">确定</el-button>
+                    </div>
+                </el-dialog>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!-- 引入组件库 -->
+<script src="../../js/vue.js"></script>
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!--<script src="../../plugins/elementui/index.js"></script>-->
+<script src="../../js/jquery.min.js" type="text/javascript"></script>
+<script src="../../js/axios-0.18.0.js"></script>
+<script>
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            // pid: 0,
+            branchs: [],  //所有的部门
+            pagination: {//分页相关模型数据
+                currentPage: 1,//当前页码
+                pageSize: 10,//每页显示的记录数
+                total: 0,//总记录数
+                queryString: null//查询条件
+            },
+            dataList: [],//当前页要展示的分页列表数据
+            formData: {},//表单数据
+            dialogFormVisible: false,//增加表单是否可见
+            dialogFormVisible4Edit: false,//编辑表单是否可见
+            rules: {//校验规则
+                bname: [{required: true, message: '任务计划名称为必填项', trigger: 'blur'}],
+            }
+        },
+        //钩子函数，VUE对象初始化完成后自动执行
+        created() {
+            this.findPage();//VUE对象初始化完成后调用分页查询方法，完成分页查询
+            this.getBranchs();
+        },
+        methods: {
+            //查询所有的部门
+            getBranchs() {
+                axios.get("/branch/findAll").then((resp) => {
+                    //赋值
+                    this.branchs = resp.data;
+                })
+            },
+            //编辑
+            handleEdit() {
+
+                //进行表单校验
+                this.$refs['dataEditForm'].validate((valid) => {
+                    if (valid) {
+                        //表单校验通过，可以提交数据
+                        axios.post("/taskplan/edit", this.formData).then((res) => {
+                            if (res.data.flag) {
+                                //弹出成功提示信息
+                                this.$message({
+                                    type: 'success',
+                                    message: res.data.message
+                                });
+                            } else {
+                                //执行失败
+                                this.$message.error(res.data.message);
+                            }
+                        }).finally(() => {
+                            //不管成功还是失败，都调用分页查询方法
+                            this.findPage();
+                            //隐藏编辑窗口
+                            this.dialogFormVisible4Edit = false;
+                        });
+                    } else {
+                        //表单校验不通过
+                        this.$message.error("表单数据校验失败!");
+                        return false;
+                    }
+                });
+            },
+            //添加
+            handleAdd() {
+                //进行表单校验
+                this.$refs['dataAddForm'].validate((valid) => {
+                    if (valid) {
+                        //表单校验通过，发生ajax请求，将录入的数据提交到后台进行处理
+                        console.log(this.formData);
+                        axios.post("/taskplan/add", this.formData).then((res) => {
+                            // axios.post("/developer/add", params).then((res) => {
+                            //关闭新增窗口
+                            this.dialogFormVisible = false;
+                            //data 就是返回的result对象
+                            if (res.data.flag) {//执行成功
+                                //新增成功后，重新调用分页查询方法，查询出最新的数据
+                                this.findPage();
+                                //弹出提示信息
+                                this.$message({
+                                    message: res.data.message,
+                                    type: 'success'
+                                });
+                            } else {//执行失败
+                                //弹出提示
+                                this.$message.error(res.data.message);
+                            }
+                        });
+                    } else {
+                        //校验不通过
+                        this.$message.error("数据校验失败，请检查你的输入信息是否正确！");
+                        return false;
+                    }
+                });
+            },
+            //分页查询
+            findPage() {
+                //发送ajax请求，提交分页相关请求参数（页码、每页显示记录数、查询条件）
+                var param = {
+                    currentPage: this.pagination.currentPage,
+                    pageSize: this.pagination.pageSize,
+                    queryString: this.pagination.queryString
+                };
+                axios.post("/taskplan/all", param).then((res) => {
+                    //解析Controller响应回的数据，为模型数据赋值
+                    console.log(res.data.total);
+                    this.pagination.total = res.data.total;
+                    this.dataList = res.data.rows;
+                });
+            },
+            // 重置表单
+            resetForm() {
+                this.formData = {};//重置数据
+            },
+            // 弹出添加窗口
+            handleCreate() {
+                //弹出新增窗口
+                this.dialogFormVisible = true;
+                this.resetForm();  //表单数据清零
+                this.pids = [];
+            },
+            // 弹出编辑窗口
+            handleUpdate(row) {
+                //弹出编辑窗口
+                this.dialogFormVisible4Edit = true;
+                //row对象   {"pid":1,"pname":"碧桂园"........}
+                //回显数据，发送ajax请求根据ID查询当前检查项数据
+                axios.get("/taskplan/findByTid?tid=" + row.tid).then((res) => {
+                    if (res.data.flag) {
+                        //进行回显，基于VUE的数据绑定实现
+                        //res.data     res对象的属性    res.data.data 返回的对象里面有data对象
+                        this.formData = res.data.data;
+
+                    } else {
+                        //查询失败，弹出提示
+                        this.$message.error(res.data.message);
+                    }
+                });
+            },
+            //切换页码
+            handleCurrentChange(currentPage) {
+                //设置最新的页码
+                this.pagination.currentPage = currentPage;
+                //重新调用findPage方法进行分页查询
+                this.findPage();
+            },
+            // 删除
+            handleDelete(row) {//row其实是一个json对象，json对象的结构为{"age":"0-100","attention":"无","code":"0011","id":38,"name":"白细胞计数","price":10.0,"remark":"白细胞计数","sex":"0","type":"2"}
+                //alert(row.id);
+                this.$confirm("你确定要删除当前数据吗？", "提示", {//确认框
+                    type: 'warning'
+                }).then(() => {
+                    //用户点击确定按钮，发送ajax请求，将检查项ID提交到Controller进行处理
+                    axios.get("/taskplan/delete?tid=" + row.tid).then((res) => {
+                        if (res.data.flag) {
+                            //执行成功
+                            //弹出成功提示信息
+                            this.$message({
+                                type: 'success',
+                                message: res.data.message
+                            });
+                            //重新进行分页查询
+                            this.findPage();
+                        } else {
+                            //执行失败
+                            this.$message.error(res.data.message);
+                        }
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '操作已取消'
+                    });
+                });
+            }
+        }
+    })
+</script>
+</html>

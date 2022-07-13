@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.farm.mapper.FarmMapper">
+
+    <resultMap type="TFarm" id="TFarmResult">
+        <result property="id" column="id"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="district" column="district"/>
+        <result property="type" column="type"/>
+        <result property="name" column="name"/>
+        <result property="linkman" column="linkman"/>
+        <result property="telephone" column="telephone"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+        <result property="userId" column="userId"/>
+        <result property="mainCrop" column="mainCrop"/>
+        <result property="area" column="area"/>
+        <result property="img" column="img"/>
+    </resultMap>
+
+    <resultMap id="TFarmAndUserResultMap" type="TFarm" extends="TFarmResult">
+        <association property="sysUser" javaType="SysUser">
+            <id column="userId" property="id"></id>
+            <result property="username" column="username"/>
+            <!--            <result property="password"    column="password"    />-->
+            <result property="salt" column="salt"/>
+            <result property="nickname" column="nickname"/>
+            <result property="headImgUrl" column="headImgUrl"/>
+            <result property="phone" column="phone"/>
+            <result property="telephone" column="telephone"/>
+            <result property="email" column="email"/>
+            <result property="birthday" column="birthday"/>
+            <result property="sex" column="sex"/>
+            <!--        <result property="STATUS"    column="STATUS"    />-->
+            <result property="createTime" column="createTime"/>
+            <result property="updateTime" column="updateTime"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectTFarmVo">
+        select id,
+               province,
+               city,
+               district,
+               type,
+               name,
+               linkman,
+               telephone,
+               remark,
+               createTime,
+               updateTime,
+               userId,
+               mainCrop,
+               area,
+               img
+        from t_farm
+    </sql>
+
+    <sql id="selectTFarmAndSysUserVo">
+        select *
+        from t_farm
+                 left join sys_user on t_farm.userId = sys_user.id
+    </sql>
+
+    <select id="selectTFarmPage" parameterType="TFarm" resultMap="TFarmAndUserResultMap">
+        <include refid="selectTFarmAndSysUserVo"/>
+        <where>
+            sys_user.STATUS = 1
+            <if test="province != null  and province != ''">and province = #{province}</if>
+            <if test="city != null  and city != ''">and city = #{city}</if>
+            <if test="district != null  and district != ''">and district = #{district}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="linkman != null  and linkman != ''">and linkman = #{linkman}</if>
+            <if test="telephone != null  and telephone != ''">and telephone = #{telephone}</if>
+            <if test="createTime != null ">and createTime = #{createTime}</if>
+            <if test="updateTime != null ">and updateTime = #{updateTime}</if>
+            <if test="userId != null ">and userId = #{userId}</if>
+            <if test="mainCrop != null  and mainCrop != ''">and mainCrop = #{mainCrop}</if>
+            <if test="area != null ">and area = #{area}</if>
+            <if test="img != null ">and img = #{img}</if>
+        </where>
+    </select>
+
+
+    <select id="selectTFarmList" parameterType="TFarm" resultMap="TFarmResult">
+        <include refid="selectTFarmVo"/>
+        <where>
+            <if test="province != null  and province != ''">and province = #{province}</if>
+            <if test="city != null  and city != ''">and city = #{city}</if>
+            <if test="district != null  and district != ''">and district = #{district}</if>
+            <if test="type != null  and type != ''">and type = #{type}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="linkman != null  and linkman != ''">and linkman = #{linkman}</if>
+            <if test="telephone != null  and telephone != ''">and telephone = #{telephone}</if>
+            <if test="createTime != null ">and createTime = #{createTime}</if>
+            <if test="updateTime != null ">and updateTime = #{updateTime}</if>
+            <if test="userId != null ">and userId = #{userId}</if>
+            <if test="mainCrop != null  and mainCrop != ''">and mainCrop = #{mainCrop}</if>
+            <if test="area != null ">and area = #{area}</if>
+            <if test="img != null ">and img = #{img}</if>
+        </where>
+    </select>
+    <select id="selectTFarmAll"  resultMap="TFarmResult">
+        <include refid="selectTFarmVo"/>
+    </select>
+
+
+    <select id="selectTFarmById" parameterType="Long" resultMap="TFarmResult">
+        <include refid="selectTFarmVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTFarm" parameterType="TFarm" useGeneratedKeys="true" keyProperty="id">
+        insert into t_farm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="province != null">province,</if>
+            <if test="city != null">city,</if>
+            <if test="district != null">district,</if>
+            <if test="type != null">type,</if>
+            <if test="name != null">name,</if>
+            <if test="linkman != null">linkman,</if>
+            <if test="telephone != null">telephone,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">createTime,</if>
+            <if test="updateTime != null">updateTime,</if>
+            <if test="userId != null">userId,</if>
+            <if test="mainCrop != null">mainCrop,</if>
+            <if test="area != null">area,</if>
+            <if test="img != null">img,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="province != null">#{province},</if>
+            <if test="city != null">#{city},</if>
+            <if test="district != null">#{district},</if>
+            <if test="type != null">#{type},</if>
+            <if test="name != null">#{name},</if>
+            <if test="linkman != null">#{linkman},</if>
+            <if test="telephone != null">#{telephone},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="mainCrop != null">#{mainCrop},</if>
+            <if test="area != null">#{area},</if>
+            <if test="img != null">#{img},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTFarm" parameterType="TFarm">
+        update t_farm
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="province != null">province = #{province},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="district != null">district = #{district},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="linkman != null">linkman = #{linkman},</if>
+            <if test="telephone != null">telephone = #{telephone},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+            <if test="userId != null">userId = #{userId},</if>
+            <if test="mainCrop != null">mainCrop = #{mainCrop},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="img != null">img = #{img},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTFarmById" parameterType="Long">
+        delete
+        from t_farm
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteTFarmByIds" parameterType="String">
+        delete from t_farm where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

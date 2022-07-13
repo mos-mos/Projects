@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.farm.mapper.ProductBatchesMapper">
+
+    <resultMap type="ProductBatches" id="ProductBatchesResult">
+        <result property="id" column="id"/>
+        <result property="productName" column="product_name"/>
+        <result property="isActive" column="isactive"/>
+        <result property="productBatch" column="product_batch"/>
+        <result property="area" column="area"/>
+        <result property="recoveryDate" column="recoverydate"/>
+<!--        <result property="img" column="img"/>-->
+        <result property="feature" column="feature"/>
+        <result property="sysUserId" column="sys_user_id"/>
+        <result property="farmId" column="farm_id"/>
+    </resultMap>
+    
+    <resultMap id="ProductBatchesAndUserAndFarmResultMap" type="ProductBatches" extends="ProductBatchesResult">
+        <association property="tFarm" javaType="TFarm">
+            <id column="farmId" property="id"></id>
+            <result property="province" column="province"/>
+            <result property="city" column="city"/>
+            <result property="district" column="district"/>
+            <result property="type" column="type"/>
+            <result property="name" column="name"/>
+            <result property="linkman" column="linkman"/>
+            <result property="telephone" column="telephone"/>
+            <result property="remark" column="remark"/>
+            <result property="createTime" column="createTime"/>
+            <result property="updateTime" column="updateTime"/>
+            <result property="userId" column="userId"/>
+            <result property="mainCrop" column="mainCrop"/>
+            <result property="area" column="area"/>
+        <!--    <result property="img" column="img"/>-->
+        </association>
+        <association property="sysUser" javaType="SysUser">
+            <id column="sysUserId" property="id"></id>
+            <result property="username" column="username"/>
+            <!--            <result property="password"    column="password"    />-->
+            <result property="salt" column="salt"/>
+            <result property="nickname" column="nickname"/>
+            <result property="headImgUrl" column="headImgUrl"/>
+            <result property="phone" column="phone"/>
+            <result property="telephone" column="telephone"/>
+            <result property="email" column="email"/>
+            <result property="birthday" column="birthday"/>
+            <result property="sex" column="sex"/>
+            <!--        <result property="STATUS"    column="STATUS"    />-->
+            <result property="createTime" column="createTime"/>
+            <result property="updateTime" column="updateTime"/>
+        </association>
+    </resultMap>
+
+    <sql id="selectProductBatchesVo">
+        select id,
+               product_name,
+               isactive,
+               product_batch,
+               area,
+               recoverydate,
+               img,
+               feature,
+               sys_user_id,
+               farm_id
+        from product_batches
+    </sql>
+
+    <sql id="selectProductBatchesAndFarmAndUserVo">
+        SELECT
+            *
+        FROM
+            product_batches
+                LEFT JOIN sys_user ON product_batches.sys_user_id = sys_user.id
+                LEFT JOIN t_farm ON product_batches.farm_id = t_farm.id
+    </sql>
+
+    <select id="selectProductBatchesPage" parameterType="ProductBatches" resultMap="ProductBatchesAndUserAndFarmResultMap">
+        <include refid="selectProductBatchesAndFarmAndUserVo"/>
+        <where>
+            sys_user.STATUS = 1
+            <if test="productName != null  and productName != ''">and product_name like concat('%', #{productName}, '%')</if>
+            <if test="isActive != null  and isActive != ''">and isActive = #{isActive}</if>
+            <if test="productBatch != null  and productBatch != ''">and product_batch = #{productBatch}</if>
+            <if test="area != null ">and area = #{area}</if>
+            <if test="recoveryDate != null ">and recoveryDate = #{recoveryDate}</if>
+            <if test="img != null  and img != ''">and img = #{img}</if>
+            <if test="feature != null  and feature != ''">and feature = #{feature}</if>
+            <if test="sysUserId != null ">and sys_user_id = #{sysUserId}</if>
+            <if test="farmId != null ">and farm_id = #{farmId}</if>
+        </where>
+    </select>
+
+    <select id="selectProductBatchesList" parameterType="ProductBatches" resultMap="ProductBatchesResult">
+        <include refid="selectProductBatchesVo"/>
+        <where>
+            <if test="productName != null  and productName != ''">and product_name like concat('%', #{productName},'%')</if>
+            <if test="isActive != null  and isActive != ''">and isActive = #{isActive}</if>
+            <if test="productBatch != null  and productBatch != ''">and product_batch = #{productBatch}</if>
+            <if test="area != null ">and area = #{area}</if>
+            <if test="recoveryDate != null ">and recoveryDate = #{recoveryDate}</if>
+            <if test="img != null  and img != ''">and img = #{img}</if>
+            <if test="feature != null  and feature != ''">and feature = #{feature}</if>
+            <if test="sysUserId != null ">and sys_user_id = #{sysUserId}</if>
+            <if test="farmId != null ">and farm_id = #{farmId}</if>
+        </where>
+    </select>
+
+    <select id="selectProductBatchesById" parameterType="Long" resultMap="ProductBatchesResult">
+        <include refid="selectProductBatchesVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertProductBatches" parameterType="ProductBatches" useGeneratedKeys="true" keyProperty="id">
+        insert into product_batches
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productName != null">product_name,</if>
+            <if test="isActive != null">isActive,</if>
+            <if test="productBatch != null">product_batch,</if>
+            <if test="area != null">area,</if>
+            <if test="recoveryDate != null">recoveryDate,</if>
+           <!-- <if test="img != null">img,</if>-->
+            <if test="feature != null">feature,</if>
+            <if test="sysUserId != null">sys_user_id,</if>
+            <if test="farmId != null">farm_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productName != null">#{productName},</if>
+            <if test="isActive != null">#{isActive},</if>
+            <if test="productBatch != null">#{productBatch},</if>
+            <if test="area != null">#{area},</if>
+            <if test="recoveryDate != null">#{recoveryDate},</if>
+           <!-- <if test="img != null">#{img},</if>-->
+            <if test="feature != null">#{feature},</if>
+            <if test="sysUserId != null">#{sysUserId},</if>
+            <if test="farmId != null">#{farmId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateProductBatches" parameterType="ProductBatches">
+        update product_batches
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="isActive != null">isActive = #{isActive},</if>
+            <if test="productBatch != null">product_batch = #{productBatch},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="recoveryDate != null">recoveryDate = #{recoveryDate},</if>
+           <!-- <if test="img != null">img = #{img},</if>-->
+            <if test="feature != null">feature = #{feature},</if>
+            <if test="sysUserId != null">sys_user_id = #{sysUserId},</if>
+            <if test="farmId != null">farm_id = #{farmId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProductBatchesById" parameterType="Long">
+        delete
+        from product_batches
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteProductBatchesByIds" parameterType="String">
+        delete from product_batches where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

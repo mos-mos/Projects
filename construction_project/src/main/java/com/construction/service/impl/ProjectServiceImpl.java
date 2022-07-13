@@ -101,7 +101,6 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectMapper, Project> impl
                 project.setContractor(contractor);
             }
         }
-
         return project;
     }
 

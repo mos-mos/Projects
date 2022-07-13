@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.farm.mapper.TDeviceGatherMapper">
+
+    <resultMap type="TDeviceGather" id="TDeviceGatherResult">
+        <result property="id" column="id"/>
+        <result property="deviceId" column="deviceId"/>
+        <result property="deviceSn" column="deviceSn"/>
+        <result property="deviceName" column="deviceName"/>
+        <result property="deviceType" column="deviceType"/>
+        <result property="basicData" column="basicData"/>
+        <result property="measurementUnitId" column="measurementUnitId"/>
+        <result property="measurementUnitName" column="measurementUnitName"/>
+        <result property="measureUnitType" column="measureUnitType"/>
+        <result property="gatherTime" column="gatherTime"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+    </resultMap>
+
+    <sql id="selectTDeviceGatherVo">
+        select id,
+               deviceId,
+               deviceSn,
+               deviceName,
+               deviceType,
+               basicData,
+               measurementUnitId,
+               measurementUnitName,
+               measureUnitType,
+               gatherTime,
+               createTime,
+               updateTime
+        from t_device_gather
+    </sql>
+
+    <select id="selectTDeviceGatherPage" parameterType="TDeviceGather" resultMap="TDeviceGatherResult">
+        <include refid="selectTDeviceGatherVo"/>
+        <where>
+            <if test="deviceId != null ">and deviceId = #{deviceId}</if>
+            <if test="deviceSn != null  and deviceSn != ''">and deviceSn = #{deviceSn}</if>
+            <if test="deviceName != null  and deviceName != ''">and deviceName like concat('%', #{deviceName}, '%')</if>
+            <if test="deviceType != null  and deviceType != ''">and deviceType = #{deviceType}</if>
+            <if test="basicData != null ">and basicData = #{basicData}</if>
+            <if test="measurementUnitId != null ">and measurementUnitId = #{measurementUnitId}</if>
+            <if test="measurementUnitName != null  and measurementUnitName != ''">and measurementUnitName like
+                concat('%', #{measurementUnitName}, '%')
+            </if>
+            <if test="measureUnitType != null  and measureUnitType != ''">and measureUnitType = #{measureUnitType}</if>
+            <if test="gatherTime != null ">and gatherTime = #{gatherTime}</if>
+            <if test="createTime != null ">and createTime = #{createTime}</if>
+            <if test="updateTime != null ">and updateTime = #{updateTime}</if>
+        </where>
+    </select>
+
+    <select id="selectTDeviceGatherList" parameterType="TDeviceGather" resultMap="TDeviceGatherResult">
+        <include refid="selectTDeviceGatherVo"/>
+        <where>
+            <if test="deviceId != null ">and deviceId = #{deviceId}</if>
+            <if test="deviceSn != null  and deviceSn != ''">and deviceSn = #{deviceSn}</if>
+            <if test="deviceName != null  and deviceName != ''">and deviceName like concat('%', #{deviceName}, '%')</if>
+            <if test="deviceType != null  and deviceType != ''">and deviceType = #{deviceType}</if>
+            <if test="basicData != null ">and basicData = #{basicData}</if>
+            <if test="measurementUnitId != null ">and measurementUnitId = #{measurementUnitId}</if>
+            <if test="measurementUnitName != null  and measurementUnitName != ''">and measurementUnitName like
+                concat('%', #{measurementUnitName}, '%')
+            </if>
+            <if test="measureUnitType != null  and measureUnitType != ''">and measureUnitType = #{measureUnitType}</if>
+            <if test="gatherTime != null ">and gatherTime = #{gatherTime}</if>
+            <if test="createTime != null ">and createTime = #{createTime}</if>
+            <if test="updateTime != null ">and updateTime = #{updateTime}</if>
+        </where>
+    </select>
+
+    <select id="selectTDeviceGatherById" parameterType="Long" resultMap="TDeviceGatherResult">
+        <include refid="selectTDeviceGatherVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTDeviceGather" parameterType="TDeviceGather" useGeneratedKeys="true" keyProperty="id">
+        insert into t_device_gather
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null">deviceId,</if>
+            <if test="deviceSn != null">deviceSn,</if>
+            <if test="deviceName != null">deviceName,</if>
+            <if test="deviceType != null">deviceType,</if>
+            <if test="basicData != null">basicData,</if>
+            <if test="measurementUnitId != null">measurementUnitId,</if>
+            <if test="measurementUnitName != null">measurementUnitName,</if>
+            <if test="measureUnitType != null">measureUnitType,</if>
+            <if test="gatherTime != null">gatherTime,</if>
+            <if test="createTime != null">createTime,</if>
+            <if test="updateTime != null">updateTime,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="deviceId != null">#{deviceId},</if>
+            <if test="deviceSn != null">#{deviceSn},</if>
+            <if test="deviceName != null">#{deviceName},</if>
+            <if test="deviceType != null">#{deviceType},</if>
+            <if test="basicData != null">#{basicData},</if>
+            <if test="measurementUnitId != null">#{measurementUnitId},</if>
+            <if test="measurementUnitName != null">#{measurementUnitName},</if>
+            <if test="measureUnitType != null">#{measureUnitType},</if>
+            <if test="gatherTime != null">#{gatherTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTDeviceGather" parameterType="TDeviceGather">
+        update t_device_gather
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="deviceId != null">deviceId = #{deviceId},</if>
+            <if test="deviceSn != null">deviceSn = #{deviceSn},</if>
+            <if test="deviceName != null">deviceName = #{deviceName},</if>
+            <if test="deviceType != null">deviceType = #{deviceType},</if>
+            <if test="basicData != null">basicData = #{basicData},</if>
+            <if test="measurementUnitId != null">measurementUnitId = #{measurementUnitId},</if>
+            <if test="measurementUnitName != null">measurementUnitName = #{measurementUnitName},</if>
+            <if test="measureUnitType != null">measureUnitType = #{measureUnitType},</if>
+            <if test="gatherTime != null">gatherTime = #{gatherTime},</if>
+            <if test="createTime != null">createTime = #{createTime},</if>
+            <if test="updateTime != null">updateTime = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTDeviceGatherById" parameterType="Long">
+        delete
+        from t_device_gather
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteTDeviceGatherByIds" parameterType="String">
+        delete from t_device_gather where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
